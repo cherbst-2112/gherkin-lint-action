@@ -28,5 +28,5 @@ echo
 
 set -ex
 
-gherkin-lint "${options[@]}" "${featureFiles[@]}" |
+gherkin-lint "${options[@]}" "${featureFiles[@]}" 2>&1 |
 jq -r '.[] | .filePath as $fp | .errors[] | "\($fp):\(.line):1:w: \(.message)"'
