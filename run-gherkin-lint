@@ -27,4 +27,7 @@ featureFiles=($(echo "${INPUT_FEATURE_FILES:-.}" | tr ',' ' '))
 echo
 
 set -ex
-gherkin-lint "${options[@]}" "${featureFiles[@]}"
+
+gherkin-lint "${options[@]}" "${featureFiles[@]}" |
+jq -r '.[] | .filePath as $fp | .errors[] | "\($fp):\(.line):1:w: \(.message)"' |
+reviewdog -efm="%f:%l:%c:%t:%m" -name="gherkin-lint" -reporter=github-pr-check
